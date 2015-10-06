@@ -18,6 +18,10 @@ public:
 
     void lookAt( Point point );
 
+    void Rotation_i(float ang);
+    void Rotation_j(float ang);
+    void Rotation_k(float ang);
+
     //void setImgSize(int width, int height);
 
     Point getPos();

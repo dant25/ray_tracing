@@ -5,7 +5,8 @@
 #include<vector>
 #include "Primitive.h"
 #include "Sphere.h"
-
+#include "triangle.h"
+#include "importer.h"
 
 struct Light {
     Color color;
@@ -23,6 +24,10 @@ public:
     void addLight(const Point& center, int r, int g, int b, float att);
 
     void addSphere(const Point& center, float radius, Material mat);
+
+    void addTorus(const char* file_path, Material mat);
+
+    void addTriangle(const Point& p1, const Point& p2, const Point& p3, Material mat);
 
 
 

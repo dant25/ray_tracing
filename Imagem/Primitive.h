@@ -11,17 +11,19 @@
 #include <list>
 #include "Color.h"
 
-enum PrimitiveType { CUBE, CORNER, CYLINDER, SPHERE};
+enum PrimitiveType { SPHERE, TRIANGLE};
 class Primitive {
     public:
         //TODO desconsiderar material
         Primitive();
         Primitive(const Material& mat);
 
-        virtual PrimitiveType getPrimitiveType() = 0;
+        PrimitiveType getPrimitiveType() {return type;};
 
         virtual bool Intersect(const Ray& ray, std::list<Interval> &interval) = 0;
+
         virtual Vec3 getNormal(const Point& p) = 0;
+        virtual Vec3 getNormal() = 0;
     
         int id;
     //protected:

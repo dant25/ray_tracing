@@ -88,3 +88,38 @@ void Scene::addSphere(const Point& center, float radius, Material mat) {
 
     objects.push_back(s);
 }
+
+void Scene::addTriangle(const Point& p1, const Point& p2, const Point& p3, Material mat)
+{
+    Triangle *t = new Triangle(p1, p2, p3, mat);
+    t->id = this->id;
+    this->id++;
+
+    objects.push_back(t);
+}
+
+void Scene::addTorus(const char* file_path, Material mat)
+{
+    ObjImporter importer( file_path, false);
+
+    Point p1, p2, p3;
+
+    for( int i=0; i < importer.faces.size(); i++ )
+    {
+        p1 = Point( importer.vertices[ importer.faces[i].x ]->x,
+                    importer.vertices[ importer.faces[i].x ]->y,
+                    importer.vertices[ importer.faces[i].x ]->z );
+        p2 = Point( importer.vertices[ importer.faces[i].y ]->x,
+                    importer.vertices[ importer.faces[i].y ]->y,
+                    importer.vertices[ importer.faces[i].y ]->z );
+        p3 = Point( importer.vertices[ importer.faces[i].z ]->x,
+                    importer.vertices[ importer.faces[i].z ]->y,
+                    importer.vertices[ importer.faces[i].z ]->z );
+
+        Triangle *t = new Triangle(p1, p2, p3, mat);
+        t->id = this->id;
+        this->id++;
+
+        objects.push_back(t);
+    }
+}

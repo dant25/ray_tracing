@@ -26,7 +26,9 @@ SOURCES += main.cpp\
     Material.cpp \
     Color.cpp \
     scene.cpp \
-    math/point3d.cpp
+    math/point3d.cpp \
+    triangle.cpp \
+    importer.cpp
 
 HEADERS  += mainwindow.h \
     Camera.h \
@@ -42,6 +44,8 @@ HEADERS  += mainwindow.h \
     BoundingBox.h \
     scene.h \
     math/Quaternions.h \
-    math/point3d.h
+    math/point3d.h \
+    triangle.h \
+    importer.h
 
 FORMS    += mainwindow.ui

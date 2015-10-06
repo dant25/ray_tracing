@@ -11,14 +11,13 @@
 
 class Sphere : public Primitive {
     public:
-        //TODO: desconsiderar material ou usar um default
-        Sphere(const Material& mat, const Point& p, float r);
+        //Sphere(const Material& mat, const Point& p, float r);
         Sphere(const Point& center, float radius);
-
-        virtual PrimitiveType getPrimitiveType() { return type; }
 
         Vec3 getNormal(const Point& p) { return (p - center)/radius; }
         bool Intersect(const Ray& r, std::list<Interval> &interval);
+
+        virtual Vec3 getNormal() {};
 
 
         float getRadius() { return radius; }

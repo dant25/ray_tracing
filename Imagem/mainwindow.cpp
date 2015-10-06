@@ -3,10 +3,6 @@
 #include <omp.h>
 #include <sys/time.h>
 
-#include "math/Quaternions.h"
-
-#include "Sphere.h"
-
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -16,8 +12,16 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    image = QImage(800,800, QImage::Format_RGB32);
-    img = QImage(800,800, QImage::Format_RGB32);
+    tamX = 800;
+    tamY = 800;
+
+    pixels.resize(tamX);
+    for (int i = 0; i < tamX; i++)
+        pixels[i].resize(tamY);
+
+
+    image = QImage(tamX,tamY, QImage::Format_RGB32);
+    img = QImage(tamX,tamY, QImage::Format_RGB32);
 
 
     criaCena();
@@ -51,6 +55,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::criaCena()
 {
+/*
     Material material( Color(0.2, 0.0, 0.0), Color(1.0, 0, 0), Color(1.0, 1.0, 1.0), 10 );      ///VERMELHA
     scene.addSphere(Point{-14, 0, 0}, 10, material);
 
@@ -62,10 +67,38 @@ void MainWindow::criaCena()
 
     Material material4( Color(0.2, 0.2, 0.2), Color(1.0, 1.0, 1.0), Color(1.0, 1.0, 1.0), 10 );      ///BRANCA
     scene.addSphere(Point{0, 14, 0}, 10, material4);
+*/
 
-    scene.addLight(Point{0, 20, 40}, 1.0, 1.0, 1.0, 0.0001);
+    Material material5( Color(0.2, 0.2, 0.0), Color(1.0, 1.0, 0.0), Color(1.0, 1.0, 1.0), 10 );      ///AMARELO
 
-    camera = new Camera(800, 800);
+
+    scene.addTorus( "../resources/torus.obj", material5);
+
+/*
+    ///=======
+    /// CHAO
+    scene.addTriangle( Point{-4, -3, -3}, Point{4, -3, -3},Point{4, -3, -7}, material );
+    scene.addTriangle( Point{-4, -3, -3}, Point{4, -3, -7},Point{-4, -3, -7}, material );
+    /// TRAS
+    scene.addTriangle( Point{-4, -3, -7}, Point{4, -3, -7},Point{4, 5, -7}, material2 );
+    scene.addTriangle( Point{-4, -3, -7}, Point{4, 5, -7},Point{-4, 5, -7}, material2 );
+    /// ESQ
+    scene.addTriangle( Point{-4, -3, -3}, Point{-4, -3, -7},Point{-4, 5, -7}, material3 );
+    scene.addTriangle( Point{-4, -3, -3}, Point{-4, 5, -7},Point{-4, 5, -3}, material3 );
+    /// DIR
+    scene.addTriangle( Point{4, -3, -3}, Point{4, 5, -3},Point{4, 5, -7}, material4 );
+    scene.addTriangle( Point{4, -3, -3}, Point{4, 5, -7},Point{4, -3, -7}, material4 );
+    /// TETO
+    scene.addTriangle( Point{-4, 5, -3}, Point{-4, 5, -7},Point{4, 5, -7}, material5 );
+    scene.addTriangle( Point{-4, 5, -3}, Point{4, 5, -7},Point{4, 5, -3}, material5 );
+    ///=======
+*/
+
+    scene.addLight(Point{0, 4, -5}, 1.0, 1.0, 1.0, 0.0001);
+    scene.addLight(Point{0, 50, 70}, 1.0, 1.0, 1.0, 0.0001);
+
+
+    camera = new Camera(tamX, tamY);
     camera->setPos( Point{0, 0, 30} );
     camera->lookAt( Point{0, 0, 0} );
 }
@@ -90,7 +123,7 @@ void MainWindow::normalizePixel(int i, int j)
 
 void MainWindow::renderiza()
 {
-    QImage img = QImage(800,800, QImage::Format_RGB32);
+    QImage img = QImage(tamX,tamY, QImage::Format_RGB32);
 
     #pragma omp parallel for
     for(int i = 0; i < camera->imgHeight; i++)
@@ -102,7 +135,7 @@ void MainWindow::renderiza()
             Intersection intersect;
             if(scene.Intersect(ray, intersect))
             {
-                float distanceToLight = (scene.lights[0].position - intersect.point).length();
+                /*float distanceToLight = (scene.lights[0].position - intersect.point).length();
                 float attenuation = 1.0 / (1.0 + scene.lights[0].attenuation * pow(distanceToLight, 2));
 
 
@@ -116,7 +149,7 @@ void MainWindow::renderiza()
 
                 double fator_dif = Dot(intersect.normal, L);
                 if( fator_dif < 0  )
-                    fator_dif=0;
+                    fator_dif = 0;
 
                 ///COEFICIENTE DIFUSO
                 pixels[i][j].r += attenuation * scene.lights[0].color.r * fabs(fator_dif)*intersect.material.diffuse.r;
@@ -126,13 +159,30 @@ void MainWindow::renderiza()
                 Vec3 reflexao = reflete(L,intersect.normal);
                 double fator_esp = Dot( ray.raio(), reflexao );
                 if( fator_esp < 0  )
-                    fator_esp=0;
+                    fator_esp = 0;
 
                 ///COEFICIENTE ESPECULAR
                 pixels[i][j].r += attenuation * scene.lights[0].color.r * fabs(pow(fator_esp, intersect.material.k))*intersect.material.specular.r;
                 pixels[i][j].g += attenuation * scene.lights[0].color.g * fabs(pow(fator_esp, intersect.material.k))*intersect.material.specular.g;
                 pixels[i][j].b += attenuation * scene.lights[0].color.b * fabs(pow(fator_esp, intersect.material.k))*intersect.material.specular.b;
 
+                normalizePixel(i, j);*/
+
+                Color cor, auxCor;
+
+                for(int luz=0; luz < scene.lights.size(); luz++)
+                {
+                    auxCor = calcContrib(ray, intersect, luz);
+                    cor.r += auxCor.r;
+                    cor.g += auxCor.g;
+                    cor.b += auxCor.b;
+                }
+
+                pixels[i][j].r = cor.r;
+                pixels[i][j].g = cor.g;
+                pixels[i][j].b = cor.b;
+
+                normalizePixel(i, j);
 
                 ///REFLEXÃO DO RAIO
                 Intersection intersect2;
@@ -141,19 +191,48 @@ void MainWindow::renderiza()
 
                 if( scene.Intersect( ray2, intersect2) )
                 {
-                    L = scene.lights[0].position - intersect2.point;
+                    /*L = scene.lights[0].position - intersect2.point;
                     L.normalize();
                     fator_dif = Dot(intersect2.normal, L);
 
                     if( fator_dif < 0  )
                         fator_dif = 0;
 
-                    ///COEFICIENTE DIFUSO NA REFLEXÃO
-                    pixels[i][j].r += attenuation * scene.lights[0].color.r * fabs(fator_dif) * intersect2.material.diffuse.r;
-                    pixels[i][j].g += attenuation * scene.lights[0].color.g * fabs(fator_dif) * intersect2.material.diffuse.g;
-                    pixels[i][j].b += attenuation * scene.lights[0].color.b * fabs(fator_dif) * intersect2.material.diffuse.b;
-                }
+                    reflexao = reflete(L, intersect2.normal);
+                    fator_esp = Dot( ray.raio(), reflexao );
 
+                    if( fator_esp < 0  )
+                        fator_esp = 0;
+
+                    ///COEFICIENTE DIFUSO NA REFLEXÃO
+                    float a = attenuation * scene.lights[0].color.r * fabs(fator_dif) * intersect2.material.diffuse.r;
+                    float b = attenuation * scene.lights[0].color.g * fabs(fator_dif) * intersect2.material.diffuse.g;
+                    float c = attenuation * scene.lights[0].color.b * fabs(fator_dif) * intersect2.material.diffuse.b;
+
+                    ///COEFICIENTE ESPECULAR NA REFLEXÃO
+                    a += attenuation * scene.lights[0].color.r * fabs(pow(fator_esp, intersect.material.k))*intersect.material.specular.r;
+                    b += attenuation * scene.lights[0].color.g * fabs(pow(fator_esp, intersect.material.k))*intersect.material.specular.g;
+                    c += attenuation * scene.lights[0].color.b * fabs(pow(fator_esp, intersect.material.k))*intersect.material.specular.b;
+
+
+                    pixels[i][j].r = 3.0*(pixels[i][j].r /4.0) + (a/4.0);
+                    pixels[i][j].g = 3.0*(pixels[i][j].g /4.0) + (b/4.0);
+                    pixels[i][j].b = 3.0*(pixels[i][j].b /4.0) + (c/4.0);*/
+
+                    cor.setColor(0,0,0);
+                    for(int luz=0; luz < scene.lights.size(); luz++)
+                    {
+                        auxCor = calcContrib(ray2, intersect2, luz);
+                        cor.r += auxCor.r;
+                        cor.g += auxCor.g;
+                        cor.b += auxCor.b;
+                    }
+
+                    ///USA APENAS 1/4 DA REFLEXÃO NA COR FINAL
+                    pixels[i][j].r = 3.0*(pixels[i][j].r /4.0) + (cor.r/4.0);
+                    pixels[i][j].g = 3.0*(pixels[i][j].g /4.0) + (cor.g/4.0);
+                    pixels[i][j].b = 3.0*(pixels[i][j].b /4.0) + (cor.b/4.0);
+                }
 
                 normalizePixel(i, j);
                 img.setPixel(i,j, qRgb(pixels[i][j].r * 255, pixels[i][j].g * 255,  pixels[i][j].b * 255));
@@ -167,6 +246,53 @@ void MainWindow::renderiza()
 
     image.swap(img);
 }
+
+
+Color MainWindow::calcContrib( Ray ray, const Intersection intersect, int l )
+{
+    Color cor;
+
+    float distanceToLight = (scene.lights[l].position - intersect.point).length();
+    float attenuation = 1.0 / (1.0 + scene.lights[l].attenuation * pow(distanceToLight, 2));
+
+
+    ///COEFICIENTE AMBIENTE
+    cor.r = scene.lights[l].color.r * intersect.material.ambient.r;
+    cor.g = scene.lights[l].color.g * intersect.material.ambient.g;
+    cor.b = scene.lights[l].color.b * intersect.material.ambient.b;
+
+    Vec3 L = scene.lights[l].position - intersect.point;
+    L.normalize();
+
+    double fator_dif = Dot(intersect.normal, L);
+    if( fator_dif < 0  )
+        fator_dif = 0;
+
+    ///COEFICIENTE DIFUSO
+    cor.r += attenuation * scene.lights[l].color.r * fabs(fator_dif)*intersect.material.diffuse.r;
+    cor.g += attenuation * scene.lights[l].color.g * fabs(fator_dif)*intersect.material.diffuse.g;
+    cor.b += attenuation * scene.lights[l].color.b * fabs(fator_dif)*intersect.material.diffuse.b;
+
+    Vec3 reflexao = reflete(L,intersect.normal);
+    double fator_esp = Dot( ray.raio(), reflexao );
+    if( fator_esp < 0  )
+        fator_esp = 0;
+
+    ///COEFICIENTE ESPECULAR
+    cor.r += attenuation * scene.lights[l].color.r * fabs(pow(fator_esp, intersect.material.k))*intersect.material.specular.r;
+    cor.g += attenuation * scene.lights[l].color.g * fabs(pow(fator_esp, intersect.material.k))*intersect.material.specular.g;
+    cor.b += attenuation * scene.lights[l].color.b * fabs(pow(fator_esp, intersect.material.k))*intersect.material.specular.b;
+
+    if(cor.r > 1.0)
+        cor.r = 1.0;
+    if(cor.g > 1.0)
+        cor.g = 1.0;
+    if(cor.b > 1.0)
+        cor.b = 1.0;
+
+    return cor;
+}
+
 
 void MainWindow::keyPressEvent(QKeyEvent *keyEvent)
 {
@@ -217,58 +343,22 @@ void MainWindow::keyPressEvent(QKeyEvent *keyEvent)
 
         case 56:        ///NUMPAD 8
         {
-            Point3D newVIEW, newUP;
-
-            newUP = rotateQuat( Point3D(camera->jc.x, camera->jc.y, camera->jc.z) , Point3D(camera->ic.x, camera->ic.y, camera->ic.z), ang);
-            newUP = Point3D::normalize(newUP);
-            newVIEW = rotateQuat( Point3D(camera->kc.x, camera->kc.y, camera->kc.z) , Point3D(camera->ic.x, camera->ic.y, camera->ic.z), ang);
-            newVIEW = Point3D::normalize(newVIEW);
-
-            camera->jc = Vec3(newUP.x, newUP.y, newUP.z);
-            camera->kc = Vec3(newVIEW.x, newVIEW.y, newVIEW.z);
-
+            camera->Rotation_i(-ang);
             break;
         }
         case 50:        ///NUMPAD 2
         {
-            Point3D newVIEW, newUP;
-
-            newUP = rotateQuat( Point3D(camera->jc.x, camera->jc.y, camera->jc.z) , Point3D(camera->ic.x, camera->ic.y, camera->ic.z), -ang);
-            newUP = Point3D::normalize(newUP);
-            newVIEW = rotateQuat( Point3D(camera->kc.x, camera->kc.y, camera->kc.z) , Point3D(camera->ic.x, camera->ic.y, camera->ic.z), -ang);
-            newVIEW = Point3D::normalize(newVIEW);
-
-            camera->jc = Vec3(newUP.x, newUP.y, newUP.z);
-            camera->kc = Vec3(newVIEW.x, newVIEW.y, newVIEW.z);
-
+            camera->Rotation_i(ang);
             break;
         }
         case 54:        ///NUMPAD 6
         {
-            Point3D newVIEW, newRIGHT;
-
-            newVIEW = rotateQuat( Point3D(camera->kc.x, camera->kc.y, camera->kc.z) , Point3D(camera->jc.x, camera->jc.y, camera->jc.z), ang);
-            newVIEW = Point3D::normalize(newVIEW);
-            newRIGHT = rotateQuat( Point3D(camera->ic.x, camera->ic.y, camera->ic.z) , Point3D(camera->jc.x, camera->jc.y, camera->jc.z), ang);
-            newRIGHT = Point3D::normalize(newRIGHT);
-
-            camera->ic = Vec3(newRIGHT.x, newRIGHT.y, newRIGHT.z);
-            camera->kc = Vec3(newVIEW.x, newVIEW.y, newVIEW.z);
-
+            camera->Rotation_j(ang);
             break;
         }
         case 52:        ///NUMPAD 4
         {
-            Point3D newVIEW, newRIGHT;
-
-            newVIEW = rotateQuat( Point3D(camera->kc.x, camera->kc.y, camera->kc.z) , Point3D(camera->jc.x, camera->jc.y, camera->jc.z), -ang);
-            newVIEW = Point3D::normalize(newVIEW);
-            newRIGHT = rotateQuat( Point3D(camera->ic.x, camera->ic.y, camera->ic.z) , Point3D(camera->jc.x, camera->jc.y, camera->jc.z), -ang);
-            newRIGHT = Point3D::normalize(newRIGHT);
-
-            camera->ic = Vec3(newRIGHT.x, newRIGHT.y, newRIGHT.z);
-            camera->kc = Vec3(newVIEW.x, newVIEW.y, newVIEW.z);
-
+            camera->Rotation_j(-ang);
             break;
         }
 

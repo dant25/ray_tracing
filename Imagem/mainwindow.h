@@ -3,6 +3,9 @@
 
 #include <QMainWindow>
 #include <QKeyEvent>
+
+#include <vector>
+
 #include "scene.h"
 #include "Camera.h"
 
@@ -31,6 +34,8 @@ public:
 
     void keyPressEvent(QKeyEvent *keyEvent);
 
+    Color calcContrib(Ray ray, const Intersection intersect , int l);
+
 private:
     Ui::MainWindow *ui;
     QImage image;
@@ -39,7 +44,11 @@ private:
     Camera *camera;
     QGraphicsScene* graphics;
 
-    Color pixels[800][800];
+    int tamX;
+    int tamY;
+
+    //Color pixels[800][800];
+    std::vector< std::vector<Color> > pixels;
 };
 
 #endif // MAINWINDOW_H

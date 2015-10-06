@@ -2,11 +2,11 @@
 #include <cmath>
 #include <iostream>
 
-Sphere::Sphere( const Material& mat, const Point& p, float r) : Primitive(mat){
+/*Sphere::Sphere( const Material& mat, const Point& p, float r) : Primitive(mat){
     center = p;
     radius = r;
     type = SPHERE;
-}
+}*/
 
 Sphere::Sphere(const Point& center, float radius) : center(center), radius(radius) {
 

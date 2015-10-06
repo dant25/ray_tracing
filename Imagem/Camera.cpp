@@ -2,6 +2,7 @@
 #include "Camera.h"
 #include "Ray.h"
 #include "Primitive.h"
+#include "math/Quaternions.h"
 
 
 Camera::Camera() :  ic(Vec3(1.0, 0.0, 0.0)), jc(Vec3(0.0, 1.0, 0.0)),
@@ -62,6 +63,33 @@ void Camera::lookAt(Point point )
 //    std::cout << ic.x << "\t" << ic.y << "\t" << ic.z << std::endl;
 //    std::cout << jc.x << "\t" << jc.y << "\t" << jc.z << std::endl;
 //    std::cout << kc.x << "\t" << kc.y << "\t" << kc.z << std::endl;
+}
+
+void Camera::Rotation_i(float ang)
+{
+    Point3D newVIEW, newUP;
+
+    newUP = rotateQuat( Point3D(this->jc.x, this->jc.y, this->jc.z) , Point3D(this->ic.x, this->ic.y, this->ic.z), ang);
+    newUP = Point3D::normalize(newUP);
+    newVIEW = rotateQuat( Point3D(this->kc.x, this->kc.y, this->kc.z) , Point3D(this->ic.x, this->ic.y, this->ic.z), ang);
+    newVIEW = Point3D::normalize(newVIEW);
+
+    this->jc = Vec3(newUP.x, newUP.y, newUP.z);
+    this->kc = Vec3(newVIEW.x, newVIEW.y, newVIEW.z);
+}
+
+
+void Camera::Rotation_j(float ang)
+{
+    Point3D newVIEW, newRIGHT;
+
+    newVIEW = rotateQuat( Point3D(this->kc.x, this->kc.y, this->kc.z) , Point3D(this->jc.x, this->jc.y, this->jc.z), ang);
+    newVIEW = Point3D::normalize(newVIEW);
+    newRIGHT = rotateQuat( Point3D(this->ic.x, this->ic.y, this->ic.z) , Point3D(this->jc.x, this->jc.y, this->jc.z), ang);
+    newRIGHT = Point3D::normalize(newRIGHT);
+
+    this->ic = Vec3(newRIGHT.x, newRIGHT.y, newRIGHT.z);
+    this->kc = Vec3(newVIEW.x, newVIEW.y, newVIEW.z);
 }
 
 /*void Camera::setImgSize(int width, int height) {
