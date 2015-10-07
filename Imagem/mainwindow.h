@@ -34,12 +34,11 @@ public:
 
     void keyPressEvent(QKeyEvent *keyEvent);
 
-    Color calcContrib(Ray ray, const Intersection intersect , int l);
+    Color calcContrib(Ray ray, const Intersection intersect );
 
 private:
     Ui::MainWindow *ui;
     QImage image;
-    QImage img;
     Scene scene;
     Camera *camera;
     QGraphicsScene* graphics;

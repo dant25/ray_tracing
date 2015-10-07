@@ -8,6 +8,8 @@ class Material {
         Material();
         Material(const Color& amb, const Color& diff, const Color& spec, int k);
 
+        Material(const Color& amb, const Color& diff, const Color& spec, int k, float ka, float kd, float ks);
+
         void setAmbient(const Color& amb);
         void setDiffuse(const Color& diff);
         void setSpecular(const Color& spec);
@@ -21,6 +23,9 @@ class Material {
         Color ambient;
         Color diffuse;
         Color specular;
+
+        float Ka, Kd, Ks;
+
         int k;
 };
 

@@ -92,6 +92,20 @@ void Camera::Rotation_j(float ang)
     this->kc = Vec3(newVIEW.x, newVIEW.y, newVIEW.z);
 }
 
+
+void Camera::Rotation_k(float ang)
+{
+    Point3D newUP, newRIGHT;
+
+    newUP = rotateQuat( Point3D(this->jc.x, this->jc.y, this->jc.z) , Point3D(this->kc.x, this->kc.y, this->kc.z), ang);
+    newUP = Point3D::normalize(newUP);
+    newRIGHT = rotateQuat( Point3D(this->ic.x, this->ic.y, this->ic.z) , Point3D(this->kc.x, this->kc.y, this->kc.z), ang);
+    newRIGHT = Point3D::normalize(newRIGHT);
+
+    this->ic = Vec3(newRIGHT.x, newRIGHT.y, newRIGHT.z);
+    this->jc = Vec3(newUP.x, newUP.y, newUP.z);
+}
+
 /*void Camera::setImgSize(int width, int height) {
     if (width == imgWidth && height == imgHeight)
         return;
