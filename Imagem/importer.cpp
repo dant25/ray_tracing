@@ -1,5 +1,48 @@
 #include "importer.h"
 
+ObjImporter::ObjImporter()
+{
+    max = maxX = maxY = maxZ = -HUGE_VALF ;
+
+    min = minX = minY = minZ = HUGE_VALF ;
+}
+
+ObjImporter::ObjImporter(const char* file_path, bool haveTexture)
+{
+    max = maxX = maxY = maxZ = -HUGE_VALF ;
+
+    min = minX = minY = minZ = HUGE_VALF ;
+
+    this->haveTexture=haveTexture;
+
+    loadData(file_path);
+}
+
+void ObjImporter::findMinMax()
+{
+    if( minX < minY )
+    {
+        if( minX < minZ )   min = minX;
+        else min = minZ;
+    }
+    else
+    {
+        if( minY < minZ )   min = minY;
+        else min = minZ;
+    }
+///=============
+    if( maxX > maxY )
+    {
+        if( maxX > maxZ )   max = maxX;
+        else max = maxZ;
+    }
+    else
+    {
+        if( maxY > maxZ )   max = maxY;
+        else max = maxZ;
+    }
+}
+
 void ObjImporter::loadData(const char* &file_path)
 {
     std::ifstream file( file_path, std::ifstream::in);
@@ -12,7 +55,7 @@ void ObjImporter::loadData(const char* &file_path)
     {
         tipo = "_";
         file >> tipo;
-        if (tipo == "v" ) {
+        if (tipo == "v" ) {        ///VERTICES
             float v1, v2, v3;
 
             file >> v1;
@@ -26,6 +69,16 @@ void ObjImporter::loadData(const char* &file_path)
 //            z = (double)strtod( v3.c_str(), NULL );
 //            cout << "PONTOS " << x << " " << y << " " << z << endl;
 //            cout << "PONTOS == " << v1 << " " << v2 << " " << v3 << endl;
+
+
+
+            if( v1 > maxX )  maxX = v1;
+            if( v2 > maxY )  maxY = v2;
+            if( v3 > maxZ )  maxZ = v3;
+
+            if( v1 < minX )  minX = v1;
+            if( v2 < minY )  minY = v2;
+            if( v3 < minZ )  minZ = v3;
 
             vertices.push_back(new Ponto(v1, v2, v3));
 
@@ -67,9 +120,9 @@ void ObjImporter::loadData(const char* &file_path)
 
             if( !this->haveTexture )
             {
-                file >> face.x; //file >> normal.x;
-                file >> face.y; //file >> normal.y;
-                file >> face.z; //file >> normal.z;
+                file >> face.x; file >> normal.x;
+                file >> face.y; file >> normal.y;
+                file >> face.z; file >> normal.z;
             }
             else
             {
@@ -88,19 +141,21 @@ void ObjImporter::loadData(const char* &file_path)
             face.x--;
             face.y--;
             face.z--;
-            //normal.x--;
-            //normal.y--;
-            //normal.z--;
+            normal.x--;
+            normal.y--;
+            normal.z--;
 
             //cout << "FACES = " << face.x << " " << face.y << " " << face.z << endl;
             //cout << "NORMS = " << normal.x << " " << normal.y << " " << normal.z << endl;
 
             faces.push_back(face);
-            //normals_faces.push_back(normal);
+            normals_faces.push_back(normal);
 
             continue;
         }
     }
 
     file.close();
+
+    findMinMax();
 }

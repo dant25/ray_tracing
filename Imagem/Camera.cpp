@@ -29,13 +29,13 @@ Camera::~Camera() {
 }
 
 Ray Camera::createRay(int wImg, int hImg) {
-    float xw = 2*pos.z*(wImg - imgWidth/2.0) / imgWidth;
-    float yw = 2*pos.z*(hImg - imgHeight/2.0) / imgHeight;
+    float xw = 2*(wImg - imgWidth/2.0) / imgWidth;
+    float yw = 2*(hImg - imgHeight/2.0) / imgHeight;
 
     //std::cout << wImg << " " << xw << "\t"<< hImg << " " << yw << std::endl;
 
     //ponto projetado
-    Point p = pos + kc*(-pos.z) + ic*xw + jc*yw;
+    Point p = pos + kc*(-1.0) + ic*xw + jc*yw;
     Vec3 dir = p - pos;
     dir.normalize();
     //Inicializa o raio

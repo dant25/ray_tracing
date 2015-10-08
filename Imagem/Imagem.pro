@@ -28,7 +28,8 @@ SOURCES += main.cpp\
     scene.cpp \
     math/point3d.cpp \
     triangle.cpp \
-    importer.cpp
+    importer.cpp \
+    Torus.cpp
 
 HEADERS  += mainwindow.h \
     Camera.h \
@@ -46,6 +47,7 @@ HEADERS  += mainwindow.h \
     math/Quaternions.h \
     math/point3d.h \
     triangle.h \
-    importer.h
+    importer.h \
+    Torus.h
 
 FORMS    += mainwindow.ui

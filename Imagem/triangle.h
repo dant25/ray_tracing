@@ -19,7 +19,9 @@ class Triangle : public Primitive {
         virtual Vec3 getNormal(const Point& p) {return norm;};
         virtual Vec3 getNormal();
 
-    private:
+        void setNormal(Vec3 n) { this->norm = n; };
+
+    //private:
         Point p1, p2, p3;
         Vec3 norm;
 };

@@ -46,7 +46,6 @@ private:
     int tamX;
     int tamY;
 
-    //Color pixels[800][800];
     std::vector< std::vector<Color> > pixels;
 };
 

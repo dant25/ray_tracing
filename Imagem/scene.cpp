@@ -1,11 +1,10 @@
 #include "scene.h"
-
+#include <iostream>
 
 //int Scene::numSphere = 0;
 
 Scene::Scene()
 {
-    this->numSphere = 0;
     this->id = 0;
 }
 
@@ -79,8 +78,8 @@ void Scene::addLight(const Point& center, int r, int g, int b, float att)
 /**
  * Adicionar uma primitiva do tipo esfera à cena
  **/
-void Scene::addSphere(const Point& center, float radius, Material mat) {
-    this->numSphere++;
+void Scene::addSphere(const Point& center, float radius, Material mat)
+{
     Sphere *s = new Sphere(center, radius);
     s->material=mat;
     s->id = this->id;
@@ -100,7 +99,21 @@ void Scene::addTriangle(const Point& p1, const Point& p2, const Point& p3, Mater
 
 void Scene::addTorus(const char* file_path, Material mat)
 {
+    Torus *torus = new Torus();
+    torus->id = this->id;
+    this->id++;
+
     ObjImporter importer( file_path, false);
+
+    //float raio = (fabs(importer.max - importer.min)) / 2.0;
+    float raio = sqrt( pow(importer.maxX - importer.minX, 2.0)
+                       + pow(importer.maxY - importer.minY, 2.0)
+                       + pow(importer.maxZ - importer.minZ, 2.0) );
+
+
+    torus->box = Sphere( Point( (importer.maxX + importer.minX) / 2.0,
+                                (importer.maxY + importer.minY) / 2.0,
+                                (importer.maxZ + importer.minZ) / 2.0 ), raio + 0.001 );
 
     Point p1, p2, p3;
 
@@ -109,17 +122,21 @@ void Scene::addTorus(const char* file_path, Material mat)
         p1 = Point( importer.vertices[ importer.faces[i].x ]->x,
                     importer.vertices[ importer.faces[i].x ]->y,
                     importer.vertices[ importer.faces[i].x ]->z );
+
         p2 = Point( importer.vertices[ importer.faces[i].y ]->x,
                     importer.vertices[ importer.faces[i].y ]->y,
                     importer.vertices[ importer.faces[i].y ]->z );
+
         p3 = Point( importer.vertices[ importer.faces[i].z ]->x,
                     importer.vertices[ importer.faces[i].z ]->y,
                     importer.vertices[ importer.faces[i].z ]->z );
 
         Triangle *t = new Triangle(p1, p2, p3, mat);
-        t->id = this->id;
-        this->id++;
 
-        objects.push_back(t);
+        t->setNormal( importer.normals[ importer.normals_faces[i].x ] );
+
+        torus->triangles.push_back(t);
     }
+
+    objects.push_back(torus);
 }

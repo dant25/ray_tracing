@@ -12,6 +12,7 @@
 class Sphere : public Primitive {
     public:
         //Sphere(const Material& mat, const Point& p, float r);
+        Sphere() {};
         Sphere(const Point& center, float radius);
 
         Vec3 getNormal(const Point& p) { return (p - center)/radius; }

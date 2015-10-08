@@ -21,11 +21,13 @@ using namespace std;
 class ObjImporter
 {
     public:
-        ObjImporter(const char* file_path, bool haveTexture) { this->haveTexture=haveTexture; loadData(file_path);};
-        ObjImporter() {};
+        ObjImporter();
+        ObjImporter(const char* file_path, bool haveTexture);
         ~ObjImporter() {};
 
         void loadData(const char* &file_path);
+
+        void findMinMax();
 
         std::vector<Ponto*> vertices;
         std::vector<Textura> texturas;
@@ -36,6 +38,10 @@ class ObjImporter
         std::vector<Ponto> textura_faces;
         bool haveTexture;
 
+        float maxX, minX;
+        float maxY, minY;
+        float maxZ, minZ;
+        float max, min;
 
 };
 

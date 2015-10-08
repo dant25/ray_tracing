@@ -1,10 +1,10 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#include <iostream>
 #include<vector>
 #include "Primitive.h"
 #include "Sphere.h"
+#include "Torus.h"
 #include "triangle.h"
 #include "importer.h"
 
@@ -30,14 +30,10 @@ public:
     void addTriangle(const Point& p1, const Point& p2, const Point& p3, Material mat);
 
 
-
-
     std::vector<Primitive*> objects;
 
     std::vector<Light> lights;
 
-
-    int numSphere;
     int id;
 };
 
