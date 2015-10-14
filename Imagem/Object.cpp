@@ -1,14 +1,14 @@
-#include "Torus.h"
+#include "Object.h"
 #include <cmath>
 #include <iostream>
 
 
-Torus::Torus()
+Object::Object()
 {
 
 }
 
-bool Torus::Intersect(const Ray& ray, std::list<Interval> &interval)
+bool Object::Intersect(const Ray& ray, std::list<Interval> &interval)
 {
     std::list<Interval> inter;
     if( box.Intersect(ray, inter) == false )

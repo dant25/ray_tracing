@@ -88,6 +88,9 @@ void Scene::addSphere(const Point& center, float radius, Material mat)
     objects.push_back(s);
 }
 
+/**
+ * Adicionar uma primitiva do tipo triangulo à cena
+ **/
 void Scene::addTriangle(const Point& p1, const Point& p2, const Point& p3, Material mat)
 {
     Triangle *t = new Triangle(p1, p2, p3, mat);
@@ -97,23 +100,51 @@ void Scene::addTriangle(const Point& p1, const Point& p2, const Point& p3, Mater
     objects.push_back(t);
 }
 
-void Scene::addTorus(const char* file_path, Material mat)
+/**
+ * Adicionar uma primitiva genérica por aquivo .OBJ como triangulos
+ **/
+void Scene::addObject(const char* file_path, Material mat, glm::mat4 trans)
 {
-    Torus *torus = new Torus();
-    torus->id = this->id;
+    Object *object = new Object();
+    object->id = this->id;
     this->id++;
 
     ObjImporter importer( file_path, false);
 
-    //float raio = (fabs(importer.max - importer.min)) / 2.0;
-    float raio = sqrt( pow(importer.maxX - importer.minX, 2.0)
-                       + pow(importer.maxY - importer.minY, 2.0)
-                       + pow(importer.maxZ - importer.minZ, 2.0) );
+    glm::vec4 pMax( importer.maxX, importer.maxY, importer.maxZ, 1.0 );
+    glm::vec4 pMin( importer.minX, importer.minY, importer.minZ, 1.0 );
+    pMax = trans * pMax;
+    pMin = trans * pMin;
 
+    float raio = sqrt( pow(pMax.x - pMin.x, 2.0) +
+                    pow(pMax.y - pMin.y, 2.0) +
+                    pow(pMax.z - pMin.z, 2.0) ) / 2.0;
 
-    torus->box = Sphere( Point( (importer.maxX + importer.minX) / 2.0,
-                                (importer.maxY + importer.minY) / 2.0,
-                                (importer.maxZ + importer.minZ) / 2.0 ), raio + 0.001 );
+    object->box = Sphere( Point( (pMax.x + pMin.x) / 2.0,
+                                (pMax.y + pMin.y) / 2.0,
+                                (pMax.z + pMin.z) / 2.0 ), raio );
+
+    ///APLICANDO TRANSFORMAÇÕES NOS VERTICES
+    for( int i=0; i < importer.vertices.size(); i++ )
+    {
+        glm::vec4 newP( importer.vertices[i]->x, importer.vertices[i]->y, importer.vertices[i]->z, 1.0 );
+        newP = trans * newP;
+        importer.vertices[i]->x = newP.x;
+        importer.vertices[i]->y = newP.y;
+        importer.vertices[i]->z = newP.z;
+    }
+
+    ///APLICANDO TRANSFORMAÇÕES NAS NORMAIS
+    /*for( int i=0; i < importer.normals.size(); i++ )
+    {
+        glm::vec4 newP( importer.normals[i].x, importer.normals[i].y, importer.normals[i].z, 1.0 );
+        newP = trans * newP;
+        importer.normals[i].x = newP.x;
+        importer.normals[i].y = newP.y;
+        importer.normals[i].z = newP.z;
+
+        importer.normals[i].normalize();
+    }*/
 
     Point p1, p2, p3;
 
@@ -133,10 +164,11 @@ void Scene::addTorus(const char* file_path, Material mat)
 
         Triangle *t = new Triangle(p1, p2, p3, mat);
 
-        t->setNormal( importer.normals[ importer.normals_faces[i].x ] );
+        //t->setNormal( importer.normals[ importer.normals_faces[i].x ] );
 
-        torus->triangles.push_back(t);
+
+        object->triangles.push_back(t);
     }
 
-    objects.push_back(torus);
+    objects.push_back(object);
 }

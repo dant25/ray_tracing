@@ -8,6 +8,9 @@
 #include "BoundingBox.h"
 #include "Intersect.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #include <list>
 #include "Color.h"
 
@@ -28,6 +31,7 @@ class Primitive {
         int id;
     //protected:
         Material material;
+        //glm::mat4 transform;
         BoundingBox boundingBox;
     protected:
         PrimitiveType type;

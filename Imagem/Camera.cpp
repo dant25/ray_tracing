@@ -43,11 +43,16 @@ Ray Camera::createRay(int wImg, int hImg) {
 }
 
 Point Camera::getPos() {
-    return pos;
+    return this->pos;
 }
 
 void Camera::setPos(Point pos) {
     this->pos = pos;
+}
+
+Vec3 Camera::getLookAt()
+{
+    return this->kc;
 }
 
 void Camera::lookAt(Point point )

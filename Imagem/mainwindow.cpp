@@ -56,24 +56,26 @@ void MainWindow::criaCena()
 {
 
     Material material( Color(0.2, 0.0, 0.0), Color(1.0, 0, 0), Color(1.0, 1.0, 1.0), 10, 1.0, 1.0, 1.0 );      ///VERMELHA
-    //scene.addSphere(Point{-14, 0, 0}, 10, material);
+    scene.addSphere(Point{-14, 0, 0}, 10, material);
 
     Material material2( Color(0.0, 0.0, 0.2), Color(0.0, 0, 1.0), Color(1.0, 1.0, 1.0), 10, 1.0, 1.0, 1.0 );      ///AZUL
-    //scene.addSphere(Point{14, 0, 0}, 10, material2);
+    scene.addSphere(Point{14, 0, 0}, 10, material2);
 
     Material material3( Color(0.0, 0.2, 0.0), Color(0.0, 1.0, 0.0), Color(1.0, 1.0, 1.0), 10, 1.0, 1.0, 1.0 );      ///VERDE
-    //scene.addSphere(Point{0, -14, 0}, 10, material3);
+    scene.addSphere(Point{0, -14, 0}, 10, material3);
 
     Material material4( Color(0.2, 0.2, 0.2), Color(1.0, 1.0, 1.0), Color(1.0, 1.0, 1.0), 10, 1.0, 1.0, 1.0 );      ///BRANCA
-    //scene.addSphere(Point{0, 14, 0}, 10, material4);
+    scene.addSphere(Point{0, 14, 0}, 10, material4);
 
 
     Material material5( Color(0.2, 0.2, 0.0), Color(1.0, 1.0, 0.0), Color(1.0, 1.0, 1.0), 10, 1.0, 1.0, 1.0 );      ///AMARELO
 
+    glm::mat4 transform = translate(0,0,5) * scale(1.5, 1.5, 1.5) * rotate(1,1,1, 45);
 
-    //scene.addTorus( "../resources/cone.obj", material5);
-    scene.addTorus( "../resources/torus.obj", material5);
-    //scene.addTorus( "../resources/cubo.obj", material5);
+    //scene.addObject( "../resources/cone.obj", material5);
+    //scene.addObject( "../resources/torus.obj", material5);
+    scene.addObject( "../resources/cubo.obj", material5, transform);
+
 
 /*
     ///=======
@@ -100,7 +102,7 @@ void MainWindow::criaCena()
 
 
     camera = new Camera(tamX, tamY);
-    camera->setPos( Point{0, 0, 5} );
+    camera->setPos( Point{0, 0, 30} );
     camera->lookAt( Point{0, 0, 0} );
 }
 
@@ -154,7 +156,7 @@ void MainWindow::renderiza()
                 Intersection intersect2;
                 Ray ray2( intersect.point, reflete( ray.raio(), intersect.normal ) );
                 ray2.IDfonte = intersect.objIndex;
-/*
+
                 if( scene.Intersect( ray2, intersect2) )
                 {
                     cor.setColor(0,0,0);
@@ -165,15 +167,11 @@ void MainWindow::renderiza()
                     cor.b += auxCor.b * intersect.material.getSpecular().b * intersect.material.Ks;
 
 
-                    ///USA APENAS 1/4 DA REFLEXÃO NA COR FINAL
-//                    pixels[i][j].r = 3.0*(pixels[i][j].r /4.0) + (cor.r/4.0);
-//                    pixels[i][j].g = 3.0*(pixels[i][j].g /4.0) + (cor.g/4.0);
-//                    pixels[i][j].b = 3.0*(pixels[i][j].b /4.0) + (cor.b/4.0);
                     pixels[i][j].r += cor.r;
                     pixels[i][j].g += cor.g;
                     pixels[i][j].b += cor.b;
                 }
-*/
+
                 normalizePixel(i, j);
                 img.setPixel(i,j, qRgb(pixels[i][j].r * 255, pixels[i][j].g * 255,  pixels[i][j].b * 255));
             }
@@ -320,5 +318,6 @@ void MainWindow::keyPressEvent(QKeyEvent *keyEvent)
 
     graphics->addPixmap(QPixmap::fromImage(image));
 
-    //ui->graphicsView->update();
+    //rstd::cout << "Cam pos: " << camera->pos.x << "\t" << camera->pos.y << "\t" << camera->pos.z << std::endl;
+    //std::cout << "Cam look at: " << camera->getLookAt().x << "\t" << camera->getLookAt().y << "\t" << camera->getLookAt().z << std::endl;
 }

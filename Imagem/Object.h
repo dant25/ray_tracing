@@ -1,5 +1,5 @@
-#ifndef _TORUS_H_
-#define _TORUS_H_
+#ifndef _Object_H_
+#define _Object_H_
 
 #include <vector>
 #include "math/Point.h"
@@ -10,9 +10,9 @@
 #include "Intersect.h"
 
 
-class Torus : public Primitive {
+class Object : public Primitive {
     public:
-        Torus();
+        Object();
 
         virtual Vec3 getNormal() {};
         virtual Vec3 getNormal(const Point& p) { }

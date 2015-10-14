@@ -29,7 +29,7 @@ SOURCES += main.cpp\
     math/point3d.cpp \
     triangle.cpp \
     importer.cpp \
-    Torus.cpp
+    Object.cpp
 
 HEADERS  += mainwindow.h \
     Camera.h \
@@ -48,6 +48,6 @@ HEADERS  += mainwindow.h \
     math/point3d.h \
     triangle.h \
     importer.h \
-    Torus.h
+    Object.h
 
 FORMS    += mainwindow.ui

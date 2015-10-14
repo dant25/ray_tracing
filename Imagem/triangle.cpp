@@ -103,7 +103,7 @@ bool Triangle::Intersect(const Ray& r, std::list<Interval> &interval)
 
     float T = valueB / valueA;
 
-    if( T <= 0.0 )
+    if( T <= 0.00001 )
         return false;
 
 
@@ -128,10 +128,10 @@ bool Triangle::Intersect(const Ray& r, std::list<Interval> &interval)
 
     float s, t;
     s = (uv * wv - vv * wu) / D;
-    if (s < 0.0 || s > 1.0)         // I is outside T
+    if (s <= 0.00001 || s > 1.0)         // I is outside T
         return false;
     t = (uv * wu - uu * wv) / D;
-    if (t < 0.0 || (s + t) > 1.0)  // I is outside T
+    if (t <= 0.00001 || (s + t) > 1.0)  // I is outside T
         return false;
 
     ///COLOCANDO INFORMAÇÕES DO TRIANGULO NA ESTRUTURA

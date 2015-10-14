@@ -16,6 +16,7 @@ public:
     Ray createRay(int wImg, int hImg);
     void render();
 
+    Vec3 getLookAt();
     void lookAt( Point point );
 
     void Rotation_i(float ang);
@@ -34,7 +35,6 @@ public:
     Vec3 jc;
     Vec3 kc;
     Point pos;
-    Vec3 dir;
 };
 
 #endif

@@ -4,7 +4,7 @@
 #include<vector>
 #include "Primitive.h"
 #include "Sphere.h"
-#include "Torus.h"
+#include "Object.h"
 #include "triangle.h"
 #include "importer.h"
 
@@ -25,7 +25,7 @@ public:
 
     void addSphere(const Point& center, float radius, Material mat);
 
-    void addTorus(const char* file_path, Material mat);
+    void addObject(const char* file_path, Material mat, glm::mat4 trans);
 
     void addTriangle(const Point& p1, const Point& p2, const Point& p3, Material mat);
 

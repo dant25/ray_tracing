@@ -36,6 +36,18 @@ public:
 
     Color calcContrib(Ray ray, const Intersection intersect );
 
+    glm::mat4 translate(float x, float y, float z) {
+        return glm::translate(glm::mat4(), glm::vec3(x,y,z));
+    }
+
+    glm::mat4 scale(float x, float y, float z) {
+        return glm::scale(glm::mat4(), glm::vec3(x,y,z));
+    }
+
+    glm::mat4 rotate(int x, int y, int z, float ang) {
+        return glm::rotate(glm::mat4(), (ang), glm::vec3(x,y,z));
+    }
+
 private:
     Ui::MainWindow *ui;
     QImage image;
