@@ -72,8 +72,8 @@ void MainWindow::criaCena()
 
     glm::mat4 transform = translate(0,0,5) * scale(1.5, 1.5, 1.5) * rotate(1,1,1, 45);
 
-    //scene.addObject( "../resources/cone.obj", material5);
-    //scene.addObject( "../resources/torus.obj", material5);
+    //scene.addObject( "../resources/cone.obj", material5, transform);
+    //scene.addObject( "../resources/torus.obj", material5, transform);
     scene.addObject( "../resources/cubo.obj", material5, transform);
 
 
@@ -197,6 +197,21 @@ Color MainWindow::calcContrib( Ray ray, const Intersection intersect )
 
     for(int l=0; l < scene.lights.size(); l++)
     {
+        ///CALCULO DE SOMBRAS
+        Vec3 raio_luz = scene.lights[l].position - intersect.point;
+        float dist_luz = raio_luz.length();
+        raio_luz.normalize();
+
+        Intersection luz_intersect;
+        Ray r(intersect.point + (intersect.normal*0.1), raio_luz );
+
+        if( scene.Intersect( r, luz_intersect) )
+        {
+            if( luz_intersect.dist < dist_luz )
+                continue;
+        }
+        ///FIM CALCULO DE SOMBRAS
+
         float distanceToLight = (scene.lights[l].position - intersect.point).length();
         float attenuation = 1.0 / (1.0 + scene.lights[l].attenuation * pow(distanceToLight, 2));
 
