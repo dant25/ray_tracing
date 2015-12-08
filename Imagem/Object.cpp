@@ -19,13 +19,11 @@ bool Object::Intersect(const Ray& ray, std::list<Interval> &interval)
 
     Interval temp;
 //std::cout << triangles.size() << std::endl;
-    #pragma omp parallel for
+    //#pragma omp parallel for
     for(int i=0; i<triangles.size(); i++)
     {
         if( triangles[i]->Intersect(ray, interval) )
         {
-            #pragma omp critical
-            {
                 if( interval.back().begin.dist < menor_dist )
                 {
                     menor_dist = interval.back().begin.dist;
@@ -33,7 +31,6 @@ bool Object::Intersect(const Ray& ray, std::list<Interval> &interval)
                 }
 
                 flag = true;
-            }
         }
     }
 

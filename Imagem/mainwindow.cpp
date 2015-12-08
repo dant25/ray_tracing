@@ -12,8 +12,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    tamX = 800;
-    tamY = 800;
+    tamX = 600;
+    tamY = 600;
 
     pixels.resize(tamX);
     for (int i = 0; i < tamX; i++)
@@ -54,56 +54,54 @@ MainWindow::~MainWindow()
 
 void MainWindow::criaCena()
 {
+    Material material_vermelho( Color(0.2, 0.0, 0.0), Color(1.0, 0, 0), Color(1.0, 1.0, 1.0), 10, 1.0, 1.0, 1.0 );      ///VERMELHA
+    //scene.addSphere(Point{-14, 0, 0}, 10, material);
 
-    Material material( Color(0.2, 0.0, 0.0), Color(1.0, 0, 0), Color(1.0, 1.0, 1.0), 10, 1.0, 1.0, 1.0 );      ///VERMELHA
-    scene.addSphere(Point{-14, 0, 0}, 10, material);
+    Material material_azul( Color(0.0, 0.0, 0.2), Color(0.0, 0, 1.0), Color(1.0, 1.0, 1.0), 10, 1.0, 1.0, 1.0 );      ///AZUL
+    //scene.addSphere(Point{14, 0, 0}, 10, material2);
 
-    Material material2( Color(0.0, 0.0, 0.2), Color(0.0, 0, 1.0), Color(1.0, 1.0, 1.0), 10, 1.0, 1.0, 1.0 );      ///AZUL
-    scene.addSphere(Point{14, 0, 0}, 10, material2);
+    Material material_verde( Color(0.0, 0.2, 0.0), Color(0.0, 0.9, 0.0), Color(1.0, 1.0, 1.0), 50, 1.0, 1.0, 0.1 );      ///VERDE
+    //scene.addSphere(Point{0, -14, 0}, 10, material3);
 
-    Material material3( Color(0.0, 0.2, 0.0), Color(0.0, 1.0, 0.0), Color(1.0, 1.0, 1.0), 10, 1.0, 1.0, 1.0 );      ///VERDE
-    scene.addSphere(Point{0, -14, 0}, 10, material3);
+    Material material_branco( Color(0.2, 0.2, 0.2), Color(1.0, 1.0, 1.0), Color(1.0, 1.0, 1.0), 200, 1.0, 1.0, 0.0 );      ///BRANCA
+    //scene.addSphere(Point{0, 14, 0}, 10, material4);
 
-    Material material4( Color(0.2, 0.2, 0.2), Color(1.0, 1.0, 1.0), Color(1.0, 1.0, 1.0), 10, 1.0, 1.0, 1.0 );      ///BRANCA
-    scene.addSphere(Point{0, 14, 0}, 10, material4);
+    Material material_amarelo( Color(0.2, 0.2, 0.0), Color(1.0, 1.0, 0.0), Color(0.2, 0.2, 0.2), 200, 1.0, 1.0, 0.6 );      ///AMARELO
 
+    Material material_preto( Color(0.01, 0.01, 0.01), Color(0.0, 0.0, 0.0), Color(0.9, 0.9, 0.9), 5, 1.0, 1.0, 1.0 );      ///PRETO
 
-    Material material5( Color(0.2, 0.2, 0.0), Color(1.0, 1.0, 0.0), Color(1.0, 1.0, 1.0), 10, 1.0, 1.0, 1.0 );      ///AMARELO
+    //=====================================================================================================
 
-    glm::mat4 transform = translate(0,0,5) * scale(1.5, 1.5, 1.5) * rotate(1,1,1, 45);
+    glm::mat4 transform_chao = translate(0,0,0) * scale(100, 100, 100);
+    glm::mat4 transform_fundo = translate(0,100,-100) * scale(101, 101, 101) * rotate(1,0,0, 90);
+    glm::mat4 transform_Ldireita = translate(-100,100,0) * scale(101, 101, 101) * rotate(0,0,1, -90);
 
-    //scene.addObject( "../resources/cone.obj", material5, transform);
-    //scene.addObject( "../resources/torus.obj", material5, transform);
-    scene.addObject( "../resources/cubo.obj", material5, transform);
+    glm::mat4 transform_cubo = translate(-5,6,0) * scale(4, 6, 4);
+    glm::mat4 transform_mascara = translate(-5,14.5,0) * scale(7, 7, 7) * rotate(0,1,0, 35);
+    glm::mat4 transform_yoda = translate(15,0,0) * scale(18, 18, 18) * rotate(0,1,0, -45);
 
+    //=====================================================================================================
 
-/*
-    ///=======
-    /// CHAO
-    scene.addTriangle( Point{-4, -3, -3}, Point{4, -3, -3},Point{4, -3, -7}, material );
-    scene.addTriangle( Point{-4, -3, -3}, Point{4, -3, -7},Point{-4, -3, -7}, material );
-    /// TRAS
-    scene.addTriangle( Point{-4, -3, -7}, Point{4, -3, -7},Point{4, 5, -7}, material2 );
-    scene.addTriangle( Point{-4, -3, -7}, Point{4, 5, -7},Point{-4, 5, -7}, material2 );
-    /// ESQ
-    scene.addTriangle( Point{-4, -3, -3}, Point{-4, -3, -7},Point{-4, 5, -7}, material3 );
-    scene.addTriangle( Point{-4, -3, -3}, Point{-4, 5, -7},Point{-4, 5, -3}, material3 );
-    /// DIR
-    scene.addTriangle( Point{4, -3, -3}, Point{4, 5, -3},Point{4, 5, -7}, material4 );
-    scene.addTriangle( Point{4, -3, -3}, Point{4, 5, -7},Point{4, -3, -7}, material4 );
-    /// TETO
-    scene.addTriangle( Point{-4, 5, -3}, Point{-4, 5, -7},Point{4, 5, -7}, material5 );
-    scene.addTriangle( Point{-4, 5, -3}, Point{4, 5, -7},Point{4, 5, -3}, material5 );
-    ///=======
-*/
+    scene.addObject( "../resources/plane.obj", material_branco, transform_chao);            ///CHÃO
+    scene.addObject( "../resources/plane.obj", material_branco, transform_fundo);           ///FUNDO
+    scene.addObject( "../resources/plane.obj", material_branco, transform_Ldireita);        ///LATERAL DIREITA
 
-    //scene.addLight(Point{0, 4, -5}, 1.0, 1.0, 1.0, 0.0001);
-    scene.addLight(Point{0, 50, 70}, 1.0, 1.0, 1.0, 0.0001);
+    scene.addObject( "../resources/yoda.obj", material_verde, transform_yoda);
 
+    scene.addObject( "../resources/cubo.obj", material_amarelo, transform_cubo);
+    scene.addObject( "../resources/mascara.obj", material_preto, transform_mascara);
+
+    //=====================================================================================================
+
+    scene.addLight(Point{20, 40, 0}, 0.0, 0.6, 0.0, 0.001);     ///LUZ VERDE
+    scene.addLight(Point{-10, 40, 0}, 1.0, 0.0, 0.0, 0.001);     ///LUZ VERMELHA
+    scene.addLight(Point{0, 50, 15}, 1.0, 1.0, 1.0, 0.01);     ///LUZ BRANCA NORMAL
+
+    //=====================================================================================================
 
     camera = new Camera(tamX, tamY);
-    camera->setPos( Point{0, 0, 30} );
-    camera->lookAt( Point{0, 0, 0} );
+    camera->setPos( Point{10, 15, 20} );
+    camera->lookAt( Point{6, 5, 0} );
 }
 
 Vec3 MainWindow::reflete(Vec3 raio, Vec3 norm)
@@ -162,9 +160,9 @@ void MainWindow::renderiza()
                     cor.setColor(0,0,0);
 
                     auxCor = calcContrib(ray2, intersect2);
-                    cor.r += auxCor.r * intersect.material.getSpecular().r * intersect.material.Ks;
-                    cor.g += auxCor.g * intersect.material.getSpecular().g * intersect.material.Ks;
-                    cor.b += auxCor.b * intersect.material.getSpecular().b * intersect.material.Ks;
+                    cor.r += auxCor.r * intersect2.material.getSpecular().r * intersect2.material.Ks;
+                    cor.g += auxCor.g * intersect2.material.getSpecular().g * intersect2.material.Ks;
+                    cor.b += auxCor.b * intersect2.material.getSpecular().b * intersect2.material.Ks;
 
 
                     pixels[i][j].r += cor.r;
@@ -177,23 +175,26 @@ void MainWindow::renderiza()
             }
             else
             {
-                img.setPixel(i,j, qRgb(40,40,40));
+                img.setPixel(i,j, qRgb(40,40,90));
             }
         }
     }
 
     image.swap(img);
+    image.save("../quadro.png");
 }
 
 
 Color MainWindow::calcContrib( Ray ray, const Intersection intersect )
 {
     Color cor;
+    float att_sombra = 1.0;
 
     ///COEFICIENTE AMBIENTE
     cor.r = intersect.material.ambient.r * intersect.material.Ka;
     cor.g = intersect.material.ambient.g * intersect.material.Ka;
     cor.b = intersect.material.ambient.b * intersect.material.Ka;
+
 
     for(int l=0; l < scene.lights.size(); l++)
     {
@@ -208,7 +209,7 @@ Color MainWindow::calcContrib( Ray ray, const Intersection intersect )
         if( scene.Intersect( r, luz_intersect) )
         {
             if( luz_intersect.dist < dist_luz )
-                continue;
+                att_sombra *= 0.7;
         }
         ///FIM CALCULO DE SOMBRAS
 
@@ -232,7 +233,7 @@ Color MainWindow::calcContrib( Ray ray, const Intersection intersect )
         if( fator_esp < 0  )
             fator_esp = 0;
 
-        ///COEFICIENTE ESPECULAR
+//        ///COEFICIENTE ESPECULAR
         cor.r += attenuation * scene.lights[l].color.r * fabs(pow(fator_esp, intersect.material.k))*intersect.material.specular.r*intersect.material.Ks;
         cor.g += attenuation * scene.lights[l].color.g * fabs(pow(fator_esp, intersect.material.k))*intersect.material.specular.g*intersect.material.Ks;
         cor.b += attenuation * scene.lights[l].color.b * fabs(pow(fator_esp, intersect.material.k))*intersect.material.specular.b*intersect.material.Ks;
@@ -245,13 +246,17 @@ Color MainWindow::calcContrib( Ray ray, const Intersection intersect )
     if(cor.b > 1.0)
         cor.b = 1.0;
 
+    cor.r *= att_sombra;
+    cor.g *= att_sombra;
+    cor.b *= att_sombra;
+
     return cor;
 }
 
 
 void MainWindow::keyPressEvent(QKeyEvent *keyEvent)
 {
-    const float moveSpeed = 1.0; //units per second
+    const float moveSpeed = 3.0; //units per second
 
     const float ang = 10.0;
 
@@ -335,4 +340,9 @@ void MainWindow::keyPressEvent(QKeyEvent *keyEvent)
 
     //rstd::cout << "Cam pos: " << camera->pos.x << "\t" << camera->pos.y << "\t" << camera->pos.z << std::endl;
     //std::cout << "Cam look at: " << camera->getLookAt().x << "\t" << camera->getLookAt().y << "\t" << camera->getLookAt().z << std::endl;
+}
+
+void MainWindow::on_actionSalvar_triggered()
+{
+    image.save("../Save.png");
 }

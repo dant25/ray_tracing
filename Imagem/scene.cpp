@@ -65,7 +65,7 @@ bool Scene::Intersect(const Ray& ray, Intersection &intersect) {
 /**
  * Adicionar uma fonte luminosa
  **/
-void Scene::addLight(const Point& center, int r, int g, int b, float att)
+void Scene::addLight(const Point& center, float r, float g, float b, float att)
 {
     Light luz;
     luz.color.setColor(r, g, b);
@@ -139,10 +139,15 @@ void Scene::addObject(const char* file_path, Material mat, glm::mat4 trans)
     {
         glm::vec4 newP( importer.normals[i].x, importer.normals[i].y, importer.normals[i].z, 1.0 );
         newP = trans * newP;
+
+        glm::vec4 ori( 0, 0, 0, 1.0 );
+        ori = trans * ori;
+
+        newP = newP - ori;
+
         importer.normals[i].x = newP.x;
         importer.normals[i].y = newP.y;
         importer.normals[i].z = newP.z;
-
         importer.normals[i].normalize();
     }*/
 
@@ -165,6 +170,17 @@ void Scene::addObject(const char* file_path, Material mat, glm::mat4 trans)
         Triangle *t = new Triangle(p1, p2, p3, mat);
 
         //t->setNormal( importer.normals[ importer.normals_faces[i].x ] );
+
+//        t->setNormal( Vec3( (importer.normals[ importer.normals_faces[i].x ].x
+//                            + importer.normals[ importer.normals_faces[i].y ].x
+//                            + importer.normals[ importer.normals_faces[i].z ].x) / 3.0,
+//                (importer.normals[ importer.normals_faces[i].x ].y
+//                              + importer.normals[ importer.normals_faces[i].y ].y
+//                              + importer.normals[ importer.normals_faces[i].z ].y) / 3.0,
+//                (importer.normals[ importer.normals_faces[i].x ].z
+//                              + importer.normals[ importer.normals_faces[i].y ].z
+//                              + importer.normals[ importer.normals_faces[i].z ].z) / 3.0
+//                ) );
 
 
         object->triangles.push_back(t);

@@ -21,7 +21,7 @@ public:
 
     bool Intersect(const Ray& ray, Intersection &intersect);
 
-    void addLight(const Point& center, int r, int g, int b, float att);
+    void addLight(const Point& center, float r, float g, float b, float att);
 
     void addSphere(const Point& center, float radius, Material mat);
 
