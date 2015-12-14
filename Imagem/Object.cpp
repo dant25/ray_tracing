@@ -18,7 +18,7 @@ bool Object::Intersect(const Ray& ray, std::list<Interval> &interval)
     float menor_dist = HUGE_VALF;
 
     Interval temp;
-//std::cout << triangles.size() << std::endl;
+
     //#pragma omp parallel for
     for(int i=0; i<triangles.size(); i++)
     {
@@ -28,13 +28,16 @@ bool Object::Intersect(const Ray& ray, std::list<Interval> &interval)
                 {
                     menor_dist = interval.back().begin.dist;
                     temp = interval.back();
+                    temp.begin.objIndex = this->id;
+                    temp.end.objIndex = this->id;
+                    flag = true;
                 }
 
-                flag = true;
         }
     }
 
-    interval.push_front(temp);
+    if(flag)
+        interval.push_front(temp);
 
     return flag;
 }

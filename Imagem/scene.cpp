@@ -5,7 +5,7 @@
 
 Scene::Scene()
 {
-    this->id = 0;
+    this->id = 1;
 }
 
 
@@ -135,12 +135,13 @@ void Scene::addObject(const char* file_path, Material mat, glm::mat4 trans)
     }
 
     ///APLICANDO TRANSFORMAÇÕES NAS NORMAIS
-    /*for( int i=0; i < importer.normals.size(); i++ )
+    for( int i=0; i < importer.normals.size(); i++ )
     {
+//std::cout << "NORM " << i << ": " << importer.normals[i].x << " " << importer.normals[i].y << " " << importer.normals[i].z << " " << std::endl;
         glm::vec4 newP( importer.normals[i].x, importer.normals[i].y, importer.normals[i].z, 1.0 );
         newP = trans * newP;
 
-        glm::vec4 ori( 0, 0, 0, 1.0 );
+        glm::vec4 ori( 0,0,0, 1.0 );
         ori = trans * ori;
 
         newP = newP - ori;
@@ -149,7 +150,8 @@ void Scene::addObject(const char* file_path, Material mat, glm::mat4 trans)
         importer.normals[i].y = newP.y;
         importer.normals[i].z = newP.z;
         importer.normals[i].normalize();
-    }*/
+//std::cout << "NORM SAIDA " << i << ": " << importer.normals[i].x << " " << importer.normals[i].y << " " << importer.normals[i].z << " " << std::endl;
+    }
 
     Point p1, p2, p3;
 
@@ -169,19 +171,27 @@ void Scene::addObject(const char* file_path, Material mat, glm::mat4 trans)
 
         Triangle *t = new Triangle(p1, p2, p3, mat);
 
-        //t->setNormal( importer.normals[ importer.normals_faces[i].x ] );
+        t->n1 = Vec3(importer.normals[ importer.normals_faces[i].x ].x,
+                importer.normals[ importer.normals_faces[i].x ].y,
+                importer.normals[ importer.normals_faces[i].x ].z);
+        t->n2 = Vec3(importer.normals[ importer.normals_faces[i].y ].x,
+                importer.normals[ importer.normals_faces[i].y ].y,
+                importer.normals[ importer.normals_faces[i].y ].z);
+        t->n3 = Vec3(importer.normals[ importer.normals_faces[i].z ].x,
+                importer.normals[ importer.normals_faces[i].z ].y,
+                importer.normals[ importer.normals_faces[i].z ].z);
 
-//        t->setNormal( Vec3( (importer.normals[ importer.normals_faces[i].x ].x
-//                            + importer.normals[ importer.normals_faces[i].y ].x
-//                            + importer.normals[ importer.normals_faces[i].z ].x) / 3.0,
-//                (importer.normals[ importer.normals_faces[i].x ].y
-//                              + importer.normals[ importer.normals_faces[i].y ].y
-//                              + importer.normals[ importer.normals_faces[i].z ].y) / 3.0,
-//                (importer.normals[ importer.normals_faces[i].x ].z
-//                              + importer.normals[ importer.normals_faces[i].y ].z
-//                              + importer.normals[ importer.normals_faces[i].z ].z) / 3.0
-//                ) );
-
+        /*t->vertexes_norm = Vec3( (importer.normals[ importer.normals_faces[i].x ].x
+                                             + importer.normals[ importer.normals_faces[i].y ].x
+                                             + importer.normals[ importer.normals_faces[i].z ].x) / 3.0,
+                                 (importer.normals[ importer.normals_faces[i].x ].y
+                                               + importer.normals[ importer.normals_faces[i].y ].y
+                                               + importer.normals[ importer.normals_faces[i].z ].y) / 3.0,
+                                 (importer.normals[ importer.normals_faces[i].x ].z
+                                               + importer.normals[ importer.normals_faces[i].y ].z
+                                               + importer.normals[ importer.normals_faces[i].z ].z) / 3.0
+                                 );
+        t->vertexes_norm.normalize();*/
 
         object->triangles.push_back(t);
     }

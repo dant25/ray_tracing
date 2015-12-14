@@ -51,3 +51,6 @@ HEADERS  += mainwindow.h \
     Object.h
 
 FORMS    += mainwindow.ui
+
+RESOURCES += \
+    Arquivos.qrc

@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/modelos">
+        <file>resources/cone.obj</file>
+        <file>resources/mascara.obj</file>
+        <file>resources/mascara2.obj</file>
+        <file>resources/plane.obj</file>
+        <file>resources/yoda2.obj</file>
+        <file>resources/yoda.obj</file>
+        <file>resources/torus.obj</file>
+        <file>resources/cubo.obj</file>
+    </qresource>
+</RCC>

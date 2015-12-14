@@ -11,6 +11,7 @@ struct Intersection {
     float dist;
     Point point;
     Vec3 normal;
+    Vec3 vertexes_norm;
     Material material;
     int objIndex;
 };

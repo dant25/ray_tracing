@@ -32,7 +32,13 @@ Ray Camera::createRay(int wImg, int hImg) {
     float xw = 2*(wImg - imgWidth/2.0) / imgWidth;
     float yw = 2*(hImg - imgHeight/2.0) / imgHeight;
 
-    //std::cout << wImg << " " << xw << "\t"<< hImg << " " << yw << std::endl;
+    xw = (-1.0/2.0) + ((1.0 / imgWidth) + (wImg *(1.0 / imgWidth)));
+    yw = (1.0/2.0) - ((1.0 / imgHeight) + (hImg * (1.0 / imgHeight)));
+    //pix_z = D;
+
+    //std::cout << wImg << "  " << xw << "\t"<< hImg << "   " << yw << std::endl;
+
+
 
     //ponto projetado
     Point p = pos + kc*(-1.0) + ic*xw + jc*yw;
@@ -63,7 +69,8 @@ void Camera::lookAt(Point point )
     this->ic = Cross( ( ( point + Point(0, 1.0, 0) ) - this->pos  ), this->kc );
     this->ic.normalize();
 
-    this->jc = Cross( this->ic, this->kc  );        ///TA INVERTIDO!!!! GRADE VIRA O VETOR
+    //this->jc = Cross( this->ic, this->kc  );        ///TA INVERTIDO!!!! GRADE VIRA O VETOR
+    this->jc = Cross( this->kc, this->ic  );
 
 //    std::cout << ic.x << "\t" << ic.y << "\t" << ic.z << std::endl;
 //    std::cout << jc.x << "\t" << jc.y << "\t" << jc.z << std::endl;

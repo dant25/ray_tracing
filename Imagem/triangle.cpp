@@ -79,6 +79,7 @@ bool Triangle::Intersect(const Ray& r, std::list<Interval> &interval)
     Intersection intersection;
     intersection.material = this->material;
     intersection.normal = this->norm;
+    intersection.vertexes_norm = this->vertexes_norm;
     intersection.objIndex = this->id;
     intersection.point = P;
     intersection.dist = (intersection.point - r.o).length();
@@ -134,10 +135,83 @@ bool Triangle::Intersect(const Ray& r, std::list<Interval> &interval)
     if (t < 0.0 || (s + t) > 1.0)  // I is outside T
         return false;
 
+
+    ///CALCULO DA NORMAL NO VÉRTEX
+    double v1,v2,v3;
+    double dist1, dist2;
+    double A, a,b,c;
+
+    Vec3 aux1 = (this->p2 - this->p1);
+    Vec3 aux2 = (this->p3 - this->p1);
+
+    dist1 = aux1.length();
+    dist2 = aux2.length();
+
+    aux1.normalize();
+    aux2.normalize();
+
+    double ang = acos( Dot(aux1,aux2) );
+
+    A = ( dist1*dist2*sin(ang) ) / 2.0;
+    ///------------------------------------------------------------------------
+    aux1 = (this->p2 - P);
+    aux2 = (this->p3 - P);
+
+    dist1 = aux1.length();
+    dist2 = aux2.length();
+
+    aux1.normalize();
+    aux2.normalize();
+
+    ang = acos( Dot(aux1,aux2) );
+
+    a = ( dist1*dist2*sin(ang) ) / (2.0*A);     ///Coordenada do primeiro triangulo
+    ///------------------------------------------------------------------------
+    aux1 = (this->p3 - P);
+    aux2 = (this->p1 - P);
+
+    dist1 = aux1.length();
+    dist2 = aux2.length();
+
+    aux1.normalize();
+    aux2.normalize();
+
+    ang = acos( Dot(aux1,aux2) );
+
+    b = ( dist1*dist2*sin(ang) ) / (2.0*A);     ///Coordenada do segundo triangulo
+    ///------------------------------------------------------------------------
+    aux1 = (this->p1 - P);
+    aux2 = (this->p2 - P);
+
+    dist1 = aux1.length();
+    dist2 = aux2.length();
+
+    aux1.normalize();
+    aux2.normalize();
+
+    ang = acos( Dot(aux1,aux2) );
+
+    c = ( dist1*dist2*sin(ang) ) / (2.0*A);     ///Coordenada do terceiro triangulo
+    ///------------------------------------------------------------------------
+
+
     ///COLOCANDO INFORMAÇÕES DO TRIANGULO NA ESTRUTURA
     Intersection intersection;
+
+    if( a+b+c <= 1.00001 || a+b+c >= 0.99999 )
+    {
+    //std::cout << "Area T: " << A << std::endl;
+    //std::cout << "Coordenadas: " << a << "  " << b << "  " << c << std::endl;
+    //std::cout << "Sum: " << total << std::endl;
+    intersection.vertexes_norm = (n1*a) + (n2*b) + (n3*c);
+    }
+    else
+        intersection.vertexes_norm  = this->norm;
+
+
     intersection.material = this->material;
     intersection.normal = this->norm;
+
     intersection.objIndex = this->id;
     intersection.point = P;
     intersection.dist = (intersection.point - r.o).length();
@@ -149,4 +223,6 @@ bool Triangle::Intersect(const Ray& r, std::list<Interval> &interval)
 
     return true;
 }
+
+
 

@@ -48,6 +48,9 @@ public:
         return glm::rotate(glm::mat4(), (ang), glm::vec3(x,y,z));
     }
 
+private slots:
+    void on_actionSalvar_triggered();
+
 private:
     Ui::MainWindow *ui;
     QImage image;

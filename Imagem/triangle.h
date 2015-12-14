@@ -23,7 +23,9 @@ class Triangle : public Primitive {
 
     //private:
         Point p1, p2, p3;
+        Vec3 n1, n2, n3;
         Vec3 norm;
+        //Vec3 vertexes_norm;
 };
 
 #endif // TRIANGLE_H

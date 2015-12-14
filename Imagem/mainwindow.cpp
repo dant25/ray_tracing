@@ -3,6 +3,8 @@
 #include <omp.h>
 #include <sys/time.h>
 
+#include <iomanip>
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -12,8 +14,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    tamX = 600;
-    tamY = 600;
+    tamX = 900;
+    tamY = 900;
 
     pixels.resize(tamX);
     for (int i = 0; i < tamX; i++)
@@ -36,9 +38,8 @@ MainWindow::MainWindow(QWidget *parent) :
     gettimeofday(&tempo_fim,NULL);
     tf = (double)tempo_fim.tv_usec + ((double)tempo_fim.tv_sec * (1000000.0));
     ti = (double)tempo_inicio.tv_usec + ((double)tempo_inicio.tv_sec * (1000000.0));
-    tempo = (tf - ti) / 1000;
-    std::cout << "Tempo gasto em milissegundos para desenhar: " << tempo << std::endl;
-
+    tempo = (tf - ti) / 1000000;
+    std::cout << "Tempo gasto em segundos para desenhar: " << tempo << std::endl;
 
     graphics = new QGraphicsScene(this);
 
@@ -54,21 +55,19 @@ MainWindow::~MainWindow()
 
 void MainWindow::criaCena()
 {
-    Material material_vermelho( Color(0.2, 0.0, 0.0), Color(1.0, 0, 0), Color(1.0, 1.0, 1.0), 10, 1.0, 1.0, 1.0 );      ///VERMELHA
-    //scene.addSphere(Point{-14, 0, 0}, 10, material);
+    Material material_vermelho( Color(0.2, 0.0, 0.0), Color(1.0, 0, 0), Color(0.2, 0.2, 0.2), 200, 1.0, 1.0, 0.5 );      ///VERMELHA
 
     Material material_azul( Color(0.0, 0.0, 0.2), Color(0.0, 0, 1.0), Color(1.0, 1.0, 1.0), 10, 1.0, 1.0, 1.0 );      ///AZUL
-    //scene.addSphere(Point{14, 0, 0}, 10, material2);
 
     Material material_verde( Color(0.0, 0.2, 0.0), Color(0.0, 0.9, 0.0), Color(1.0, 1.0, 1.0), 50, 1.0, 1.0, 0.1 );      ///VERDE
-    //scene.addSphere(Point{0, -14, 0}, 10, material3);
 
-    Material material_branco( Color(0.2, 0.2, 0.2), Color(1.0, 1.0, 1.0), Color(1.0, 1.0, 1.0), 200, 1.0, 1.0, 0.0 );      ///BRANCA
-    //scene.addSphere(Point{0, 14, 0}, 10, material4);
+    Material material_branco( Color(0.2, 0.2, 0.2), Color(1.0, 1.0, 1.0), Color(1.0, 1.0, 1.0), 200, 1.0, 1.0, 0.05 );      ///BRANCA
+
+    Material material_troper( Color(0.4, 0.4, 0.4), Color(1.0, 1.0, 1.0), Color(1.0, 1.0, 1.0), 10, 1.0, 1.0, 0.5 );      ///BRANCA
 
     Material material_amarelo( Color(0.2, 0.2, 0.0), Color(1.0, 1.0, 0.0), Color(0.2, 0.2, 0.2), 200, 1.0, 1.0, 0.6 );      ///AMARELO
 
-    Material material_preto( Color(0.01, 0.01, 0.01), Color(0.0, 0.0, 0.0), Color(0.9, 0.9, 0.9), 5, 1.0, 1.0, 1.0 );      ///PRETO
+    Material material_preto( Color(0.01, 0.01, 0.01), Color(0.05, 0.05, 0.05), Color(0.9, 0.9, 0.9), 5, 1.0, 1.0, 1.0 );      ///PRETO
 
     //=====================================================================================================
 
@@ -77,8 +76,11 @@ void MainWindow::criaCena()
     glm::mat4 transform_Ldireita = translate(-100,100,0) * scale(101, 101, 101) * rotate(0,0,1, -90);
 
     glm::mat4 transform_cubo = translate(-5,6,0) * scale(4, 6, 4);
-    glm::mat4 transform_mascara = translate(-5,14.5,0) * scale(7, 7, 7) * rotate(0,1,0, 35);
+    glm::mat4 transform_mascara = translate(-5,14.5,0) * scale(7, 7, 7);// * rotate(0,1,0, 35);
     glm::mat4 transform_yoda = translate(15,0,0) * scale(18, 18, 18) * rotate(0,1,0, -45);
+
+    glm::mat4 transform_troper1 = translate(-20,0,0) * scale(8, 8, 8);
+    glm::mat4 transform_troper2 = translate(10,0,0) * scale(8, 8, 8);
 
     //=====================================================================================================
 
@@ -86,27 +88,35 @@ void MainWindow::criaCena()
     scene.addObject( "../resources/plane.obj", material_branco, transform_fundo);           ///FUNDO
     scene.addObject( "../resources/plane.obj", material_branco, transform_Ldireita);        ///LATERAL DIREITA
 
-    scene.addObject( "../resources/yoda.obj", material_verde, transform_yoda);
+    //scene.addObject( "../resources/yoda.obj", material_verde, transform_yoda);
 
-    scene.addObject( "../resources/cubo.obj", material_amarelo, transform_cubo);
-    scene.addObject( "../resources/mascara.obj", material_preto, transform_mascara);
+    scene.addObject( "../resources/storm_troper.obj", material_troper, transform_troper1);
+    scene.addObject( "../resources/storm_troper.obj", material_troper, transform_troper2);
+
+    scene.addObject( "../resources/cubo.obj", material_vermelho, transform_cubo);
+    scene.addObject( "../resources/mascara2.obj", material_preto, transform_mascara);
 
     //=====================================================================================================
 
-    scene.addLight(Point{20, 40, 0}, 0.0, 0.6, 0.0, 0.001);     ///LUZ VERDE
-    scene.addLight(Point{-10, 40, 0}, 1.0, 0.0, 0.0, 0.001);     ///LUZ VERMELHA
-    scene.addLight(Point{0, 50, 15}, 1.0, 1.0, 1.0, 0.01);     ///LUZ BRANCA NORMAL
+    //scene.addLight(Point{20, 40, 0}, 0.0, 0.6, 0.0, 0.001);     ///LUZ VERDE
+    scene.addLight(Point{-5, 60, 0}, 1.0, 0.0, 0.0, 0.001);     ///LUZ VERMELHA
+    scene.addLight(Point{0, 40, 15}, 1.0, 1.0, 1.0, 0.01);     ///LUZ BRANCA NORMAL
 
     //=====================================================================================================
 
     camera = new Camera(tamX, tamY);
-    camera->setPos( Point{10, 15, 20} );
-    camera->lookAt( Point{6, 5, 0} );
+    camera->setPos( Point{-5, 40, 50} );
+    camera->lookAt( Point{-5, 10, 0} );
 }
 
 Vec3 MainWindow::reflete(Vec3 raio, Vec3 norm)
 {
-    return ( norm * (2 * Dot(raio,norm) ) ) - raio ;
+    raio.x *= -1.0;
+    raio.y *= -1.0;
+    raio.z *= -1.0;
+    Vec3 reflect = raio - ( norm * (2.0 * Dot(raio,norm) ) );
+    reflect.normalize();
+    return reflect;
 }
 
 void MainWindow::normalizePixel(int i, int j)
@@ -132,6 +142,7 @@ void MainWindow::renderiza()
         for(int j = 0; j < camera->imgWidth; j++)
         {
             Ray ray = camera->createRay(i, j);
+            ray.IDfonte = -1;
 
             Intersection intersect;
 
@@ -152,23 +163,28 @@ void MainWindow::renderiza()
 
                 ///REFLEXÃO DO RAIO
                 Intersection intersect2;
-                Ray ray2( intersect.point, reflete( ray.raio(), intersect.normal ) );
+                //Ray ray2( intersect.point, reflete( ray.raio(), intersect.normal ) );
+                Ray ray2( intersect.point, reflete( ray.raio(), intersect.vertexes_norm ) );
                 ray2.IDfonte = intersect.objIndex;
 
-                if( scene.Intersect( ray2, intersect2) )
+                if( scene.Intersect( ray2, intersect2))
                 {
-                    cor.setColor(0,0,0);
+                    if( intersect.objIndex != intersect2.objIndex )
+                    {
+                        cor.setColor(0,0,0);
 
-                    auxCor = calcContrib(ray2, intersect2);
-                    cor.r += auxCor.r * intersect2.material.getSpecular().r * intersect2.material.Ks;
-                    cor.g += auxCor.g * intersect2.material.getSpecular().g * intersect2.material.Ks;
-                    cor.b += auxCor.b * intersect2.material.getSpecular().b * intersect2.material.Ks;
+                        auxCor = calcContrib(ray2, intersect2);
+                        cor.r += auxCor.r * intersect2.material.getSpecular().r * intersect2.material.Ks * intersect.material.Ks;
+                        cor.g += auxCor.g * intersect2.material.getSpecular().g * intersect2.material.Ks * intersect.material.Ks;
+                        cor.b += auxCor.b * intersect2.material.getSpecular().b * intersect2.material.Ks * intersect.material.Ks;
 
 
-                    pixels[i][j].r += cor.r;
-                    pixels[i][j].g += cor.g;
-                    pixels[i][j].b += cor.b;
+                        pixels[i][j].r += cor.r;
+                        pixels[i][j].g += cor.g;
+                        pixels[i][j].b += cor.b;
+                    }
                 }
+
 
                 normalizePixel(i, j);
                 img.setPixel(i,j, qRgb(pixels[i][j].r * 255, pixels[i][j].g * 255,  pixels[i][j].b * 255));
@@ -182,6 +198,7 @@ void MainWindow::renderiza()
 
     image.swap(img);
     image.save("../quadro.png");
+    image.save("quadro_backup.png");
 }
 
 
@@ -194,7 +211,6 @@ Color MainWindow::calcContrib( Ray ray, const Intersection intersect )
     cor.r = intersect.material.ambient.r * intersect.material.Ka;
     cor.g = intersect.material.ambient.g * intersect.material.Ka;
     cor.b = intersect.material.ambient.b * intersect.material.Ka;
-
 
     for(int l=0; l < scene.lights.size(); l++)
     {
@@ -214,26 +230,28 @@ Color MainWindow::calcContrib( Ray ray, const Intersection intersect )
         ///FIM CALCULO DE SOMBRAS
 
         float distanceToLight = (scene.lights[l].position - intersect.point).length();
-        float attenuation = 1.0 / (1.0 + scene.lights[l].attenuation * pow(distanceToLight, 2));
+        float attenuation = 1.0 / (1.0 + scene.lights[l].attenuation * pow(distanceToLight, 2.0));
 
         Vec3 L = scene.lights[l].position - intersect.point;
         L.normalize();
 
-        double fator_dif = Dot(intersect.normal, L);
-        if( fator_dif < 0  )
-            fator_dif = 0;
+        //double fator_dif = Dot(intersect.normal, L);
+        double fator_dif = Dot(intersect.vertexes_norm, L);
+        if( fator_dif < 0.0  )
+            fator_dif = 0.0;
 
         ///COEFICIENTE DIFUSO
         cor.r += attenuation * scene.lights[l].color.r * fabs(fator_dif)*intersect.material.diffuse.r*intersect.material.Kd;
         cor.g += attenuation * scene.lights[l].color.g * fabs(fator_dif)*intersect.material.diffuse.g*intersect.material.Kd;
         cor.b += attenuation * scene.lights[l].color.b * fabs(fator_dif)*intersect.material.diffuse.b*intersect.material.Kd;
 
-        Vec3 reflexao = reflete(L,intersect.normal);
+        //Vec3 reflexao = reflete(L,intersect.normal);
+        Vec3 reflexao = reflete(L,intersect.vertexes_norm);
         double fator_esp = Dot( ray.raio(), reflexao );
-        if( fator_esp < 0  )
-            fator_esp = 0;
+        if( fator_esp < 0.0  )
+            fator_esp = 0.0;
 
-//        ///COEFICIENTE ESPECULAR
+        ///COEFICIENTE ESPECULAR
         cor.r += attenuation * scene.lights[l].color.r * fabs(pow(fator_esp, intersect.material.k))*intersect.material.specular.r*intersect.material.Ks;
         cor.g += attenuation * scene.lights[l].color.g * fabs(pow(fator_esp, intersect.material.k))*intersect.material.specular.g*intersect.material.Ks;
         cor.b += attenuation * scene.lights[l].color.b * fabs(pow(fator_esp, intersect.material.k))*intersect.material.specular.b*intersect.material.Ks;
@@ -297,7 +315,7 @@ void MainWindow::keyPressEvent(QKeyEvent *keyEvent)
         case Qt::Key_Escape:
         {
             QApplication::quit();
-            break;
+            return;
         }
 
 
@@ -338,7 +356,7 @@ void MainWindow::keyPressEvent(QKeyEvent *keyEvent)
 
     graphics->addPixmap(QPixmap::fromImage(image));
 
-    //rstd::cout << "Cam pos: " << camera->pos.x << "\t" << camera->pos.y << "\t" << camera->pos.z << std::endl;
+    //std::cout << "Cam pos: " << camera->pos.x << "\t" << camera->pos.y << "\t" << camera->pos.z << std::endl;
     //std::cout << "Cam look at: " << camera->getLookAt().x << "\t" << camera->getLookAt().y << "\t" << camera->getLookAt().z << std::endl;
 }
 

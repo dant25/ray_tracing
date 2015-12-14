@@ -47,7 +47,7 @@ void ObjImporter::loadData(const char* &file_path)
 {
     std::ifstream file( file_path, std::ifstream::in);
     if( !file ){
-        printf("Impossible to open the file !\n");
+        std::cout << "Erro ao abrir o arquivo: " << file_path << std::endl;
     }
     string tipo;
 
