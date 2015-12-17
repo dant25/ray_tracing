@@ -36,7 +36,7 @@ class Vec3 {
 	return v*f;
 }*/
 
-float Dot(const Vec3& v1, const Vec3& v2);
+double Dot(const Vec3& v1, const Vec3& v2);
 
 Vec3 Cross(const Vec3& v1, const Vec3& v2);
 

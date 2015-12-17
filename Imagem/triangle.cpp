@@ -152,7 +152,7 @@ bool Triangle::Intersect(const Ray& r, std::list<Interval> &interval)
 
     double ang = acos( Dot(aux1,aux2) );
 
-    A = ( dist1*dist2*sin(ang) ) / 2.0;
+    A = ( dist1*dist2*sin( ang ) ) / 2.0;
     ///------------------------------------------------------------------------
     aux1 = (this->p2 - P);
     aux2 = (this->p3 - P);
@@ -198,7 +198,7 @@ bool Triangle::Intersect(const Ray& r, std::list<Interval> &interval)
     ///COLOCANDO INFORMAÇÕES DO TRIANGULO NA ESTRUTURA
     Intersection intersection;
 
-    if( a+b+c <= 1.00001 || a+b+c >= 0.99999 )
+    if( a+b+c <= 1.0001 || a+b+c >= 0.9999 )
     {
     //std::cout << "Area T: " << A << std::endl;
     //std::cout << "Coordenadas: " << a << "  " << b << "  " << c << std::endl;

@@ -65,11 +65,11 @@ float Vec3::length() {
 }
 
 void Vec3::normalize() {
-	float len = this->length();
+    double len = this->length();
 	x/=len; y /= len; z /= len;
 }
 
-float Dot(const Vec3& v1, const Vec3& v2) {
+double Dot(const Vec3& v1, const Vec3& v2) {
     return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }
 

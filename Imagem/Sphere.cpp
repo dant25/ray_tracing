@@ -36,6 +36,7 @@ bool Sphere::Intersect(const Ray& ray, std::list<Interval> &interval) {
         intersectPoint.point = ray.o + ray.d*intersectPoint.dist;
         intersectPoint.material = this->material;
         intersectPoint.normal = this->getNormal(intersectPoint.point);
+        intersectPoint.vertexes_norm  = this->getNormal(intersectPoint.point);
         intersectPoint.objIndex = this->id;
         //O único ponto de interseção será o começo e o fim do intervalo
         Interval i;
@@ -60,12 +61,14 @@ bool Sphere::Intersect(const Ray& ray, std::list<Interval> &interval) {
         intsctPt2.dist = largest;
         intsctPt2.point = ray.o + ray.d*intsctPt2.dist;
         intsctPt2.normal = this->getNormal(intsctPt2.point);
+        intsctPt2.vertexes_norm  = this->getNormal(intsctPt2.point);
         intsctPt2.material = this->material;
         intsctPt2.objIndex = this->id;
 
         intsctPt1.dist = smallest;
         intsctPt1.point = ray.o + ray.d*intsctPt1.dist;
         intsctPt1.normal = this->getNormal(intsctPt1.point);
+        intsctPt1.vertexes_norm  = this->getNormal(intsctPt1.point);
         intsctPt1.material = this->material;
         intsctPt1.objIndex = this->id;
         Interval i;
